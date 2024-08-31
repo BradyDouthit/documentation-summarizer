@@ -32,6 +32,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"jsdom": "^25.0.0",
+		"ollama": "^0.5.8",
 		"puppeteer": "^23.2.1"
 	}
 }
