@@ -1,21 +1,25 @@
 <script>
-  export const URL_INPUT_ID = "url-input";
   let url = "";
+  export const URL_FORM = "url-form";
 
-  $: {
+  function handleSubmit(event) {
     console.log(url);
   }
 </script>
 
 <main>
   <h1>Document Summarizer</h1>
-  <div id={URL_INPUT_ID}>
-    <input
-      id="url-input"
-      type="text"
-      placeholder="https://go.dev/"
-      bind:value={url}
-    />
+  <div>
+    <form on:submit={handleSubmit} id={URL_FORM}>
+      <label for="url">URL to summarize:</label>
+      <input
+        id="url"
+        type="text"
+        placeholder="https://go.dev/"
+        bind:value={url}
+      />
+      <button type="submit">Search</button>
+    </form>
   </div>
 </main>
 
@@ -50,5 +54,10 @@
     width: fit-content;
     height: fit-content;
     margin: 0;
+  }
+
+  #url-form {
+    display: flex;
+    flex-direction: column;
   }
 </style>
