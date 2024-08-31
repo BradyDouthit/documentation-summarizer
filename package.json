@@ -32,6 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"isomorphic-dompurify": "^2.15.0",
 		"jsdom": "^25.0.0",
 		"ollama": "^0.5.8",
 		"puppeteer": "^23.2.1"
