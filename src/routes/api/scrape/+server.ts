@@ -3,33 +3,21 @@ import { error, json } from "@sveltejs/kit";
 import ollama from "ollama";
 import { JSDOM } from "jsdom";
 
-const SYSTEM_PROMPT = `
-You are a professional software engineer. Your sole job is to look at text, and if the text is not developer documentation you must answer that you may not speak on the information provided. 
+const SYSTEM_PROMPT = `You are a highly specialized language model designed to identify developer tools, programming languages, frameworks, libraries, and any technical documentation references within a given text. Your primary task is to read the provided text and output only the detected tools or technologies wrapped in Markdown code block syntax.
 
-Do not summarize text elements. Only talk about the contents of the programming language/tool that you have detected.
+Key Instructions:
 
-If the text is in fact developer documenation you will respond simply with the language you have detected within <language> tags like so: <language>{language}</language>
+Do not add an overview of anything you find. You must ONLY answer with the tools identified.
 
-Here are some examples of your ENTIRE output (nothing else should be included):
+Detection and Tagging:
 
-<language>Rust</language>
-<language>C++</language>
-<language>Java</language>
-<language>C#</language>
-<language>JavaScript</language>
+Accurately identify and tag developer tools, programming languages, libraries, frameworks, or technical documentation references within backticks (\`) to denote code blocks in Markdown.
+Example: Given the text "We use React and Node.js for our project," your output should be: "React Node.js".
+Output Only Tools:
 
-You may not respond to anything other than developer documentation. DO NOT HALLUCINATE. DO NOT answer with any information that you know besides what is in the documentation provided unless it is factual and about the subject.
+Output only the detected tools in Markdown format, with each tool wrapped in backticks (\``;
 
-
-Do not answer any questions that are not directly related to code.
-
-Here are some examples of questions you CAN answer:
-
-"How can I make a for loop in javascript?"
-"http request in Golang"
-"What class can be used to manipulate GameObjects in Unity"
-"how to free memory in C"
-`;
+const MODEL_ID = "llama3.1";
 
 function getTextContent(html: string) {
   const dom = new JSDOM(html);
@@ -37,14 +25,25 @@ function getTextContent(html: string) {
 }
 
 async function consumeDocs(docs: string) {
-  const systemPrompt = { role: "system", content: SYSTEM_PROMPT };
-  console.log("Asking Llama");
-  const response = await ollama.chat({
-    model: "llama3.1",
-    messages: [systemPrompt, { role: "user", content: docs }],
+  // const systemPrompt = SYSTEM_PROMPT + docs;
+  console.log(`Asking ${MODEL_ID} prompt length ${docs.length}`);
+  const response = await ollama.generate({
+    model: MODEL_ID,
+    system: SYSTEM_PROMPT,
+    prompt: docs,
   });
 
-  return response.message.content;
+  return response.response;
+  // const systemPrompt = { role: "system", content: SYSTEM_PROMPT };
+  // const response = await ollama.chat({
+  //   model: MODEL_ID,
+  //   messages: [
+  //     systemPrompt,
+  //     { role: "user", content: "Please write 250 words about anything" },
+  //   ],
+  // });
+  // console.log(response.message);
+  // return response.message.content;
 }
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -55,7 +54,6 @@ export const POST: RequestHandler = async ({ request }) => {
     const html = await resp.text();
     const text = getTextContent(html);
     const answer = await consumeDocs(text);
-    console.log(answer);
     return json({ answer, text });
   }
 

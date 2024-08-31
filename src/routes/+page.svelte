@@ -1,6 +1,7 @@
 <script>
   export const URL_FORM = "url-form";
   let url = "";
+  let answer = "";
 
   async function handleSubmit() {
     try {
@@ -10,6 +11,7 @@
         body: JSON.stringify({ url }),
       });
       const body = await resp.json();
+      answer = body.answer;
       console.log(body);
     } catch (error) {
       console.log("could not get url");
@@ -31,6 +33,7 @@
       <button type="submit">Search</button>
     </form>
   </div>
+  <pre id="llm-answer">{answer}</pre>
 </main>
 
 <style>
@@ -51,6 +54,10 @@
     max-height: 100%;
   }
 
+  pre {
+    margin: 0;
+  }
+
   main {
     display: flex;
     flex-direction: column;
@@ -58,6 +65,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
+    overflow: scroll;
   }
 
   h1 {
@@ -69,5 +77,12 @@
   #url-form {
     display: flex;
     flex-direction: column;
+  }
+
+  #llm-answer {
+    width: 80%;
+    padding: 12px;
+    text-wrap: pretty;
+    flex-grow: 1;
   }
 </style>
