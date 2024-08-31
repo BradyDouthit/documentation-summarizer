@@ -1,3 +1,6 @@
 {
-	"/": []
+	"/": [],
+	"/api/scrape": [
+		"src/routes/api/scrape/+server.ts"
+	]
 }

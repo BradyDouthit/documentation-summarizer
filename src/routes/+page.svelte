@@ -1,9 +1,19 @@
 <script>
-  let url = "";
   export const URL_FORM = "url-form";
+  let url = "";
 
-  function handleSubmit(event) {
-    console.log(url);
+  async function handleSubmit() {
+    try {
+      const resp = await fetch(`/api/scrape`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const body = await resp.json();
+      console.log(body);
+    } catch (error) {
+      console.log("could not get url");
+    }
   }
 </script>
 
@@ -15,7 +25,7 @@
       <input
         id="url"
         type="text"
-        placeholder="https://go.dev/"
+        placeholder="https://pkg.go.dev/std"
         bind:value={url}
       />
       <button type="submit">Search</button>
