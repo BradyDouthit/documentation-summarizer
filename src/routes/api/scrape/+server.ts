@@ -10,12 +10,14 @@ You are a specialized LLM trained to extract programming languages, tools, frame
 
 Instructions:
 
-Always return only the comma-separated list of identified programming languages, tools, frameworks, data structures, and technologies.
-Some text will be very long, up to 1 million characters. Stay focused on the task at hand and reply with a comma separated list.
-Do not include any other text, such as overviews, descriptions, or headers. Generally speaking, each item in the list should be one word long.
-If there are no identifiable items, return an empty line.
-If any text other than the list is generated, that output is considered incorrect.
-You are to strictly follow the format of "item1, item2, item3" with no variations.
+1. Always return only the comma-separated list of identified programming languages, tools, frameworks, data structures, and technologies.
+2. Some text will be very long, up to 1 million characters. Stay focused on the task at hand and reply with a comma separated list.
+3. Do not include any other text, such as overviews, descriptions, or headers. Generally speaking, each item in the list should be one word long.
+4. If there are no identifiable items, return an empty line.
+5. If any text other than the list is generated, that output is considered incorrect.
+6. You are to strictly follow the format of "item1, item2, item3" with no variations.
+7. Read the user provided documents found just after the text: "Text: ".
+
 Examples:
 
 Input:
@@ -58,8 +60,9 @@ function getTextContent(html: string) {
     FORBID_TAGS: ["style", "script", "svg"],
     FORBID_ATTR: ["style"],
   });
-  console.log(purified);
-  return purified;
+  const dom = new JSDOM(purified);
+
+  return dom.window.document.body.textContent;
 }
 
 async function consumeDocs(docs: string) {
@@ -72,16 +75,6 @@ async function consumeDocs(docs: string) {
   });
 
   return response.response;
-  // const systemPrompt = { role: "system", content: SYSTEM_PROMPT };
-  // const response = await ollama.chat({
-  //   model: MODEL_ID,
-  //   messages: [
-  //     systemPrompt,
-  //     { role: "user", content: "Please write 250 words about anything" },
-  //   ],
-  // });
-  // console.log(response.message);
-  // return response.message.content;
 }
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -91,6 +84,7 @@ export const POST: RequestHandler = async ({ request }) => {
   if (resp.status === 200) {
     const html = await resp.text();
     const text = getTextContent(html);
+    console.log(text);
     const answer = await consumeDocs(text);
     return json({ answer, text });
   }
