@@ -1,9 +1,18 @@
 <script>
   export let answer;
+  let error = "";
+
+  $: {
+    error = answer.error;
+  }
 </script>
 
 <section id="full-answer-wrapper">
-  {#if Object.entries(answer).length > 0 && Array.isArray(answer.languages) && Array.isArray(answer.keywords)}
+  {#if error}
+    <p class="error summary">{error}</p>
+  {/if}
+
+  {#if Object.entries(answer).length > 0 && Array.isArray(answer.languages) && Array.isArray(answer.keywords) && !Boolean(error)}
     <h2 class="topic">{answer.topic}</h2>
 
     <div class="languages-wrapper">
@@ -80,5 +89,9 @@
 
     background-color: #1a1a1a;
     border-left: 5px solid var(--primary-color);
+  }
+
+  .summary.error {
+    border-color: var(--error-color);
   }
 </style>
