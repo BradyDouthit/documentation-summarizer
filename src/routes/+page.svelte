@@ -2,7 +2,7 @@
   import Answer from "$lib/components/Answer.svelte";
   import SummarizationForm from "$lib/components/SummarizationForm.svelte";
   export const URL_FORM = "url-form";
-  let answer = "";
+  let answer = {};
 </script>
 
 <main>

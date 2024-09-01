@@ -12,7 +12,7 @@
         body: JSON.stringify({ url }),
       });
       const body = await resp.json();
-      answer = body.answer;
+      answer = body;
     } catch (error) {
       console.log("could not get url");
     }

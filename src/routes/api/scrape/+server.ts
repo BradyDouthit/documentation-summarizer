@@ -69,11 +69,12 @@ export const POST: RequestHandler = async ({ request }) => {
       const text = getPrompt(html);
       const answer = await consumeDocs(text);
       const languages = getInnerText(answer, "language").split(", ");
+      const keywords = getInnerText(answer, "keywords").split(", ");
 
       return json({
         languages,
         topic: getInnerText(answer, "topic"),
-        keywords: getInnerText(answer, "keywords"),
+        keywords,
         summary: getInnerText(answer, "summary"),
       });
     }
