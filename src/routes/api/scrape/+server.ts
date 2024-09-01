@@ -5,7 +5,9 @@ import { JSDOM } from "jsdom";
 import DOMPurify from "isomorphic-dompurify";
 
 const SYSTEM_PROMPT = `
-You are an advanced language model designed to read and summarize content related exclusively to developer tooling, documentation, languages, AI, and other technical topics. Your task is to organize the provided text into four XML tags: <language>, <topic>, <keywords>, and <summary>. Follow these rules meticulously:
+You are an advanced language model designed to read and summarize content related exclusively to developer tooling, documentation, languages, AI, and other technical topics. If the topic is not technical in nature you will refuse to answer. Your task is to organize the provided text into four XML tags: <language>, <topic>, <keywords>, and <summary>. Follow these rules meticulously:
+
+You will not answer based anything not programming related. For example, if the site is Reddit you may only respond with "I can only help with technical documentation"
 
 <procedure>
 1. <language> tags must contain the programming language detected. If you do not know the programming language, answer with the most applicable singular word to describe the topic. If multiple languages are cited, list them as comma separated values within the language tag. Do not list the same language more than once.
@@ -18,6 +20,7 @@ You are an advanced language model designed to read and summarize content relate
 8. Content Filtering: If the provided text isn't related to developer tooling, documentation, or programming languages, refuse to generate a response.
 9. You will not respond at all outside of the four specified tags.
 10. Before submitting your answer, look through it and ensure all information is verifiable.
+11. Do not respond to anything that is not technical. If you see anything other than technical documentation, just say "I can only help with technical documentation".
 </procedure
 `;
 
@@ -48,7 +51,6 @@ function getPrompt(html: string) {
 }
 
 async function consumeDocs(docs: string) {
-  // const systemPrompt = SYSTEM_PROMPT + docs;
   console.log(`Asking ${MODEL_ID} prompt length ${docs.length}`);
   const response = await ollama.generate({
     model: MODEL_ID,
@@ -57,6 +59,30 @@ async function consumeDocs(docs: string) {
   });
 
   return response.response;
+}
+
+function formatAnswer(answer: string) {
+  const languages = getInnerText(answer, "language").split(", ");
+  const keywords = getInnerText(answer, "keywords").split(", ");
+  const topic = getInnerText(answer, "topic");
+  const summary = getInnerText(answer, "summary");
+
+  if (
+    languages.length > 0 &&
+    keywords.length > 0 &&
+    topic.length > 0 &&
+    summary.length > 0
+  ) {
+    return {
+      languages,
+      topic,
+      keywords,
+      summary,
+    };
+  }
+
+  // The LLM is supposed to respond with an error if the provided page is irrelevant
+  return { error: answer };
 }
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -68,15 +94,9 @@ export const POST: RequestHandler = async ({ request }) => {
       const html = await resp.text();
       const text = getPrompt(html);
       const answer = await consumeDocs(text);
-      const languages = getInnerText(answer, "language").split(", ");
-      const keywords = getInnerText(answer, "keywords").split(", ");
+      const formatted = formatAnswer(answer);
 
-      return json({
-        languages,
-        topic: getInnerText(answer, "topic"),
-        keywords,
-        summary: getInnerText(answer, "summary"),
-      });
+      return json(formatted);
     }
     return error(resp.status, "Failed to summarize.");
   } catch (err) {
