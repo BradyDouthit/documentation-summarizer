@@ -32,7 +32,7 @@
     color: var(--text-color-dark);
     padding: 8px 12px;
     max-width: 200px;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
 
     display: flex;
     flex-direction: row;

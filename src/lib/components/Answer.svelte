@@ -40,7 +40,7 @@
 
   .language {
     padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     height: fit-content;
 
     background-color: var(--primary-color);
@@ -64,7 +64,7 @@
   .keyword {
     display: inline-block;
     padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     text-wrap: nowrap;
 
     height: fit-content;
@@ -76,7 +76,7 @@
     margin-top: 20px;
     line-height: 1.6;
     padding: 15px;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
 
     background-color: #1a1a1a;
     border-left: 5px solid var(--primary-color);

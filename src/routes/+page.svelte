@@ -25,6 +25,7 @@
     --text-color-light: #ffffff; /* Pure white for text on dark elements */
     --border-color: #333333; /* A dark gray for borders and dividers */
     --shadow-color: rgba(0, 0, 0, 0.6); /* A darker shadow for more depth */
+    --border-radius: 2px;
   }
 
   :global(html) {
