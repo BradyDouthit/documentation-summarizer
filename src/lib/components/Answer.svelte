@@ -52,7 +52,7 @@
 
     font-size: 1.5em;
     font-weight: bold;
-    color: var(--primary-color-dark);
+    color: var(--text-color);
   }
 
   .keywords-wrapper {

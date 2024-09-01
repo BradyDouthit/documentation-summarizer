@@ -55,7 +55,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
 
     background-color: var(--background-color);
     color: var(--text-color);
