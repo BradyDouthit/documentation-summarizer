@@ -24,6 +24,7 @@
     id="url"
     type="text"
     placeholder="https://pkg.go.dev/std"
+    autocomplete="off"
     bind:value={url}
   />
   <button id="summarize" type="submit">Search</button>

@@ -35,10 +35,16 @@
     gap: 8px;
   }
 
+  .languages-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
   .language {
-    margin-right: 8px;
     padding: 5px 10px;
     border-radius: 4px;
+    height: fit-content;
 
     background-color: var(--primary-color);
     color: var(--text-color-dark);
@@ -52,12 +58,19 @@
     color: var(--primary-color-dark);
   }
 
+  .keywords-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+  }
+
   .keyword {
     display: inline-block;
-    margin-right: 8px;
     padding: 5px 10px;
     border-radius: 4px;
+    text-wrap: nowrap;
 
+    height: fit-content;
     background-color: var(--accent-color);
     color: var(--text-color-dark);
   }
