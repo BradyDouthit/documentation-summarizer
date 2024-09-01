@@ -23,6 +23,20 @@ You are an advanced language model designed to read and summarize content relate
 
 const MODEL_ID = "llama3.1";
 
+function getInnerText(xmlString: string, tagName: string) {
+  const tagStart = `<${tagName}>`;
+  const tagEnd = `</${tagName}>`;
+
+  const startIndex = xmlString.indexOf(tagStart) + tagStart.length;
+  const endIndex = xmlString.indexOf(tagEnd);
+
+  if (startIndex === -1 || endIndex === -1 || endIndex < startIndex) {
+    return "";
+  }
+
+  return xmlString.substring(startIndex, endIndex);
+}
+
 function getPrompt(html: string) {
   const purified = DOMPurify.sanitize(html, {
     FORBID_TAGS: ["style", "script", "svg"],
@@ -47,14 +61,24 @@ async function consumeDocs(docs: string) {
 
 export const POST: RequestHandler = async ({ request }) => {
   const { url } = await request.json();
-  const resp = await fetch(url);
 
-  if (resp.status === 200) {
-    const html = await resp.text();
-    const text = getPrompt(html);
-    const answer = await consumeDocs(text);
-    return json({ answer, text });
+  try {
+    const resp = await fetch(url);
+    if (resp.status === 200) {
+      const html = await resp.text();
+      const text = getPrompt(html);
+      const answer = await consumeDocs(text);
+      const languages = getInnerText(answer, "language").split(", ");
+
+      return json({
+        languages,
+        topic: getInnerText(answer, "topic"),
+        keywords: getInnerText(answer, "keywords"),
+        summary: getInnerText(answer, "summary"),
+      });
+    }
+    return error(resp.status, "Failed to summarize.");
+  } catch (err) {
+    return error(500, "Something unexpected happened");
   }
-
-  return error(resp.status, "Something unexpected happened");
 };
