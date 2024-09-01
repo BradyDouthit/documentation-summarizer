@@ -25,13 +25,14 @@
 <style>
   #banner {
     position: absolute;
-    top: -150%;
-    left: 50%;
+    bottom: calc(100% + 10px);
+    left: 14.5%;
     transform: translateX(-50%);
     background: var(--primary-color-dark);
     color: var(--text-color-dark);
-    padding: 8px;
+    padding: 8px 12px;
     max-width: 200px;
+    border-radius: 8px;
 
     display: flex;
     flex-direction: row;
@@ -44,5 +45,16 @@
     border: none;
     height: fit-content;
     width: fit-content;
+  }
+
+  #banner::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* Position below the tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: var(--primary-color-dark) transparent transparent transparent;
   }
 </style>

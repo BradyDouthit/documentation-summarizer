@@ -13,6 +13,8 @@
 </main>
 
 <style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Fira+Code:wght@400&display=swap");
+
   :root {
     --primary-color: #8ab4f8; /* A cool, soft blue */
     --primary-color-dark: #5c91e8; /* A slightly darker blue for contrast */
@@ -29,6 +31,7 @@
     width: 100%;
     height: 100%;
   }
+
   :global(body) {
     margin: 0;
     padding: 0;
@@ -40,6 +43,9 @@
     min-height: 100%;
     height: 100%;
     max-height: 100%;
+
+    font-family: "Inter", sans-serif;
+    color: var(--text-color);
   }
 
   main {
