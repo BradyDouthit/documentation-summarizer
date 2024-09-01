@@ -1,4 +1,5 @@
 <script>
+  import Answer from "$lib/components/Answer.svelte";
   import SummarizationForm from "$lib/components/SummarizationForm.svelte";
   export const URL_FORM = "url-form";
   let answer = "";
@@ -9,7 +10,7 @@
   <div>
     <SummarizationForm bind:answer />
   </div>
-  <pre id="llm-answer">{answer}</pre>
+  <Answer bind:answer />
 </main>
 
 <style>
@@ -30,10 +31,6 @@
     max-height: 100%;
   }
 
-  pre {
-    margin: 0;
-  }
-
   main {
     display: flex;
     flex-direction: column;
@@ -48,12 +45,5 @@
     width: fit-content;
     height: fit-content;
     margin: 0;
-  }
-
-  #llm-answer {
-    width: 80%;
-    padding: 12px;
-    text-wrap: pretty;
-    flex-grow: 1;
   }
 </style>
