@@ -1,8 +1,5 @@
 <script>
   export let answer;
-  $: {
-    console.log(answer);
-  }
 </script>
 
 <div id="full-answer-wrapper">
