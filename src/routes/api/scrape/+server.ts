@@ -7,7 +7,7 @@ import DOMPurify from "isomorphic-dompurify";
 const SYSTEM_PROMPT = `
 You are an advanced language model designed to read and summarize content related exclusively to developer tooling, documentation, languages, AI, and other technical topics. If the topic is not technical in nature you will refuse to answer. Your task is to organize the provided text into four XML tags: <language>, <topic>, <keywords>, and <summary>. Follow these rules meticulously:
 
-You will not answer based anything not programming related. For example, if the site is Reddit you may only respond with a sentence describing that you cannot answer because the content is not technical documentation. Your answer will be in plain text only.
+You will not answer based anything not programming related. For example, if the site is a post about movies you may only respond with a sentence describing that you cannot answer because the content is not technical documentation. Your answer will be in plain text only.
 
 <procedure>
 1. <language> tags must contain the programming language detected. If you do not know the programming language, answer with the most applicable singular word to describe the topic. If multiple languages are cited, list them as comma separated values within the language tag. Do not list the same language more than once.
@@ -38,6 +38,24 @@ function getInnerText(xmlString: string, tagName: string) {
   }
 
   return xmlString.substring(startIndex, endIndex);
+}
+
+// retries the request a single time. Reddit for some reason blocks the first time but not the second.
+async function getPageContents(url: string) {
+  try {
+    const resp = await fetch(url);
+
+    if (resp.status === 200) {
+      return resp;
+    }
+
+    const retryResp = await fetch(url);
+
+    return retryResp;
+  } catch (err) {
+    const resp = await fetch(url);
+    return resp;
+  }
 }
 
 function getPrompt(html: string) {
@@ -89,9 +107,10 @@ export const POST: RequestHandler = async ({ request }) => {
   const { url } = await request.json();
 
   try {
-    const resp = await fetch(url);
+    const resp = await getPageContents(url);
     if (resp.status === 200) {
       const html = await resp.text();
+      console.log(html);
       const text = getPrompt(html);
       const answer = await consumeDocs(text);
       const formatted = formatAnswer(answer);
