@@ -1,37 +1,13 @@
 <script>
+  import SummarizationForm from "$lib/components/SummarizationForm.svelte";
   export const URL_FORM = "url-form";
-  let url = "";
   let answer = "";
-
-  async function handleSubmit() {
-    try {
-      const resp = await fetch(`/api/scrape`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
-      });
-      const body = await resp.json();
-      answer = body.answer;
-      console.log(body);
-    } catch (error) {
-      console.log("could not get url");
-    }
-  }
 </script>
 
 <main>
-  <h1>Document Summarizer</h1>
+  <h1>Documentation Summarizer</h1>
   <div>
-    <form on:submit={handleSubmit} id={URL_FORM}>
-      <label for="url">URL to summarize:</label>
-      <input
-        id="url"
-        type="text"
-        placeholder="https://pkg.go.dev/std"
-        bind:value={url}
-      />
-      <button type="submit">Search</button>
-    </form>
+    <SummarizationForm bind:answer />
   </div>
   <pre id="llm-answer">{answer}</pre>
 </main>
@@ -72,11 +48,6 @@
     width: fit-content;
     height: fit-content;
     margin: 0;
-  }
-
-  #url-form {
-    display: flex;
-    flex-direction: column;
   }
 
   #llm-answer {

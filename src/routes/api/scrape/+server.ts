@@ -23,7 +23,7 @@ You are an advanced language model designed to read and summarize content relate
 
 const MODEL_ID = "llama3.1";
 
-function getTextContent(html: string) {
+function getPrompt(html: string) {
   const purified = DOMPurify.sanitize(html, {
     FORBID_TAGS: ["style", "script", "svg"],
     FORBID_ATTR: ["style"],
@@ -51,8 +51,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
   if (resp.status === 200) {
     const html = await resp.text();
-    const text = getTextContent(html);
-    console.log(text);
+    const text = getPrompt(html);
     const answer = await consumeDocs(text);
     return json({ answer, text });
   }
