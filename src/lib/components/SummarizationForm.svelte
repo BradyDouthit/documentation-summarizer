@@ -1,4 +1,6 @@
 <script>
+  import InfoBanner from "./InfoBanner.svelte";
+
   export const URL_FORM = "url-form";
   export let answer;
 
@@ -19,16 +21,19 @@
   }
 </script>
 
-<form class="flex-center" on:submit={handleSubmit} id={URL_FORM}>
-  <input
-    id="url"
-    type="text"
-    placeholder="https://pkg.go.dev/std"
-    autocomplete="off"
-    bind:value={url}
-  />
-  <button id="summarize" type="submit">Search</button>
-</form>
+<footer id="search-footer">
+  <form class="flex-center" on:submit={handleSubmit} id={URL_FORM}>
+    <input
+      id="url"
+      type="text"
+      placeholder="https://pkg.go.dev/std"
+      autocomplete="off"
+      bind:value={url}
+    />
+    <button id="summarize" type="submit">Search</button>
+    <InfoBanner />
+  </form>
+</footer>
 
 <style>
   input {
@@ -44,18 +49,23 @@
     justify-content: center;
   }
 
-  #url-form {
+  #search-footer {
     position: fixed;
     left: 0px;
     bottom: 0px;
-    display: grid;
-    grid-template-columns: 80% auto;
+    display: flex;
 
     height: 80px;
     width: 100%;
 
     background-color: #1a1a1a;
     color: #fff;
+  }
+
+  #url-form {
+    display: grid;
+    grid-template-columns: 80% auto;
+    width: 100%;
   }
 
   #url-form input {
@@ -82,7 +92,7 @@
   #url-form button {
     padding: 10px 20px;
     background-color: var(--primary-color);
-    color: #fff;
+    color: var(--text-color-dark);
     border: 1px solid var(--primary-color-dark);
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
