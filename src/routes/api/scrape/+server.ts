@@ -110,8 +110,8 @@ export const POST: RequestHandler = async ({ request }) => {
     const resp = await getPageContents(url);
     if (resp.status === 200) {
       const html = await resp.text();
-      console.log(html);
       const text = getPrompt(html);
+      // TODO: experiment with a separate small prompt that simply asks the LLM if the URL itself is relevant based on the subject
       const answer = await consumeDocs(text);
       const formatted = formatAnswer(answer);
 
