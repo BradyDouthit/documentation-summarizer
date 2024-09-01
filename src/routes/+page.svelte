@@ -6,7 +6,6 @@
 </script>
 
 <main>
-  <h1>Documentation Summarizer</h1>
   <div>
     <SummarizationForm bind:answer />
   </div>
@@ -14,6 +13,18 @@
 </main>
 
 <style>
+  :root {
+    --primary-color: #8ab4f8; /* A cool, soft blue */
+    --primary-color-dark: #5c91e8; /* A slightly darker blue for contrast */
+    --accent-color: #90caf9; /* A light, airy blue for accents */
+    --background-color: #121212; /* A very dark gray, almost black, for the background */
+    --text-color: #e0e0e0; /* A light gray for primary text */
+    --text-color-dark: #121212; /* a dark gray */
+    --text-color-light: #ffffff; /* Pure white for text on dark elements */
+    --border-color: #333333; /* A dark gray for borders and dividers */
+    --shadow-color: rgba(0, 0, 0, 0.6); /* A darker shadow for more depth */
+  }
+
   :global(html) {
     width: 100%;
     height: 100%;
@@ -39,11 +50,8 @@
     width: 100%;
     height: 100%;
     overflow: scroll;
-  }
 
-  h1 {
-    width: fit-content;
-    height: fit-content;
-    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
   }
 </style>

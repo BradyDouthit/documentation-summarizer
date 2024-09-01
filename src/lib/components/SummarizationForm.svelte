@@ -47,15 +47,51 @@
     position: fixed;
     left: 0px;
     bottom: 0px;
+    display: grid;
+    grid-template-columns: 80% auto;
+
     height: 80px;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    background: red;
+
+    background-color: #1a1a1a;
+    color: #fff;
   }
 
-  #url-form input,
-  button {
-    height: 30px;
+  #url-form input {
+    padding: 10px 15px;
+    border: 1px solid var(--primary-color-dark);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    font-size: 1em;
+    transition:
+      border-color 0.3s,
+      box-shadow 0.3s;
+
+    background-color: #1e1e1e;
+    color: var(--text-color);
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+
+  #url-form input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+  }
+
+  #url-form button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: 1px solid var(--primary-color-dark);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  #url-form button:hover {
+    background-color: var(--primary-color-dark);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
 </style>
