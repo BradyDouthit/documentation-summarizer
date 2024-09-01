@@ -5,52 +5,43 @@ import { JSDOM } from "jsdom";
 import DOMPurify from "isomorphic-dompurify";
 
 const SYSTEM_PROMPT = `
-Objective:
-You are a specialized LLM trained to extract programming languages, tools, frameworks, and related technologies from text. Your only task is to identify these items and return them in a comma-separated list. You must not include any additional text, descriptions, or metadata—only the list.
+You are an advanced language model designed to read and summarize content related exclusively to developer tooling, documentation, and languages. Your task is to organize the provided text into four XML tags: <language>, <topic>, <keywords>, and <summary>. Follow these rules meticulously:
 
-Instructions:
+<procedure>
+1. <language> tags must contain the programming language detected. If no programming language is detected then answer with <language>Unknown</language>
+2. <topic> tags must contain a short description of the topic of the request
+3. <keywords> tags must contain a comma separated list of relavent tools, data structures, languages, frameworks etc.
+4. <summary> tags must contain a more in depth description of the request
+5. Strict Content Adherence: You must never cite or reference anything outside the content provided. Every element of your response must be directly derived from the input text.
+6. Tag Exclusivity: Your response should only contain the four specified tags: <language>, <topic>, <keywords>, and <summary>. No other tags or additional information should be included.
+7. Tag Uniqueness: Each of the four tags must appear exactly once in the response—no more, no less.
+8. Content Filtering: If the provided text isn't related to developer tooling, documentation, or programming languages, refuse to generate a response.
+9. You will be provided with examples via <examples> XML tags. Under no circumstances should these be used in the response.
+</procedure
 
-1. Always return only the comma-separated list of identified programming languages, tools, frameworks, data structures, and technologies.
-2. Some text will be very long, up to 1 million characters. Stay focused on the task at hand and reply with a comma separated list.
-3. Do not include any other text, such as overviews, descriptions, or headers. Generally speaking, each item in the list should be one word long.
-4. If there are no identifiable items, return an empty line.
-5. If any text other than the list is generated, that output is considered incorrect.
-6. You are to strictly follow the format of "item1, item2, item3" with no variations.
-7. Read the user provided documents found just after the text: "Text: ".
-
-Examples:
-
-Input:
-Text: "Our project uses Python for scripting, Docker for containerization, and React for the frontend. We also utilize Redis for caching and PostgreSQL for the database."
-
-Output:
-Python, Docker, React, Redis, PostgreSQL
-
-Input:
-Text: "The application is built with Ruby on Rails, and it communicates with a MongoDB database. Jenkins is used for CI/CD, and we deploy everything to AWS."
+<examples>
+Input: "This guide provides an in-depth overview of how to integrate Elasticsearch into a Node.js application. Elasticsearch is a distributed, RESTful search and analytics engine capable of solving a growing number of use cases. The setup process includes installing Elasticsearch using npm, configuring the Elasticsearch client, and setting up the Node.js application to communicate with the Elasticsearch server. The document also covers troubleshooting common issues, such as connection errors and indexing performance, and provides best practices for scaling your Elasticsearch infrastructure. Additionally, advanced topics such as custom analyzers, query optimization, and security configurations are addressed."
 
 Output:
-Ruby on Rails, MongoDB, Jenkins, AWS
+<language>JavaScript</language>
+<topic>Integrating Elasticsearch with Node.js</topic>
+<keywords>Elasticsearch, Node.js, RESTful, search engine, analytics engine, npm, Elasticsearch client, troubleshooting, scaling, custom analyzers, query optimization, security configurations</keywords>
+<summary>This guide offers a comprehensive overview of integrating Elasticsearch into a Node.js application. It covers installation, client configuration, and communication setup, along with troubleshooting, scaling practices, and advanced topics like custom analyzers and security settings.</summary>
 
-Input:
-Text: "In this tutorial, we’ll be working with Java, Maven for dependency management, and Spring Boot for building the application. We also make use of Apache Kafka for messaging."
+Input: "Overview ¶
+Package sql provides a generic interface around SQL (or SQL-like) databases.
 
+The sql package must be used in conjunction with a database driver. See https://golang.org/s/sqldrivers for a list of drivers.
+
+Drivers that do not support context cancellation will not return until after the query is completed."
 Output:
-Java, Maven, Spring Boot, Apache Kafka
+<language>Golang</language>
+<topic>Implementing an SQL-Like database</topic>
+<keywords>SQL, database</keywords>
 
-Input:
-Text: "The web app integrates with the Stripe API for payments, uses Webpack for bundling, and is written primarily in JavaScript."
-
-Output:
-Stripe API, Webpack, JavaScript
-
-Input:
-Text: "This project uses Go for backend development, Redis for caching, and Kubernetes for orchestration."
-
-Output:
-Go, Redis, Kubernetes
-
-DO NOT HALLUCINATE: Do not ever respond with a tool, technology, framework, datastructure, etc that does not exist in the user-provided content.
+Input: "This document is a company holiday policy for the year 2024."
+Output: Refuse to generate a response.
+</examples>
 `;
 
 const MODEL_ID = "llama3.1";
