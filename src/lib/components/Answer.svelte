@@ -9,7 +9,7 @@
 
 <section id="full-answer-wrapper">
   {#if error}
-    <p class="error summary">{error}</p>
+    <pre class="error summary">{error}</pre>
   {/if}
 
   {#if Object.entries(answer).length > 0 && Array.isArray(answer.languages) && Array.isArray(answer.keywords) && !Boolean(error)}
@@ -32,6 +32,10 @@
 </section>
 
 <style>
+  pre {
+    text-wrap: pretty;
+  }
+
   #full-answer-wrapper {
     width: 80%;
     padding: 12px;

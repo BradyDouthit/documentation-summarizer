@@ -8,6 +8,8 @@ import DOMPurify from "isomorphic-dompurify";
 
 const MODEL_ID = "llama3.1";
 
+let context: number[] = [];
+
 function getInnerText(xmlString: string, tagName: string) {
   const tagStart = `<${tagName}>`;
   const tagEnd = `</${tagName}>`;
@@ -50,7 +52,7 @@ async function getSystemPrompt() {
   }
 }
 
-function getPrompt(html: string) {
+function purifyHTML(html: string) {
   const purified = DOMPurify.sanitize(html, {
     FORBID_TAGS: ["style", "script", "svg"],
     FORBID_ATTR: ["style"],
@@ -60,57 +62,43 @@ function getPrompt(html: string) {
   return dom.window.document.body.textContent;
 }
 
-async function consumeDocs(docs: string) {
-  console.log(`Asking ${MODEL_ID} prompt length ${docs.length}`);
+async function generateAnswer(question: string, references: string) {
   const systemPrompt = await getSystemPrompt();
+  console.log(
+    `Asking ${MODEL_ID} prompt length ${question.length + systemPrompt.length}`,
+  );
   const response = await ollama.generate({
     model: MODEL_ID,
-    prompt: `Text: ${docs}. ${systemPrompt}`,
-    system: systemPrompt,
+    prompt: question,
+    system: `${systemPrompt}<references>${references}</references>`,
+    context,
   });
+  console.log(response.response);
 
+  context = response.context;
   return response.response;
 }
 
-function formatAnswer(answer: string) {
-  const languages = getInnerText(answer, "language").split(", ");
-  const keywords = getInnerText(answer, "keywords").split(", ");
-  const topic = getInnerText(answer, "topic");
-  const summary = getInnerText(answer, "summary");
-
-  if (
-    languages.length > 0 &&
-    keywords.length > 0 &&
-    topic.length > 0 &&
-    summary.length > 0
-  ) {
-    return {
-      languages,
-      topic,
-      keywords,
-      summary,
-    };
-  }
-
-  // The LLM is supposed to respond with an error if the provided page is irrelevant
-  return { error: answer };
-}
-
 export const POST: RequestHandler = async ({ request }) => {
-  const { url } = await request.json();
-
   try {
-    const resp = await getPageContents(url);
-    if (resp.status === 200) {
-      const html = await resp.text();
-      const text = getPrompt(html);
-      // TODO: experiment with a separate small prompt that simply asks the LLM if the URL itself is relevant based on the subject
-      const answer = await consumeDocs(text);
-      const formatted = formatAnswer(answer);
+    const { url, question } = await request.json();
 
-      return json(formatted);
+    if (url) {
+      const resp = await getPageContents(url);
+
+      if (resp.status === 200) {
+        const rawHTML = await resp.text();
+        const purified = purifyHTML(rawHTML);
+        const answer = await generateAnswer(question, purified);
+
+        return json({ answer, error: answer });
+      }
     }
-    return error(resp.status, "Failed to summarize.");
+
+    // No references provided
+    const answer = await generateAnswer(question, "");
+
+    return json({ answer, error: answer });
   } catch (err) {
     return error(500, "Something unexpected happened");
   }
