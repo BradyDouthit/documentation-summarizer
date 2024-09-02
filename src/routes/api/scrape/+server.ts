@@ -73,9 +73,10 @@ async function generateAnswer(question: string, references: string) {
     system: `${systemPrompt}<references>${references}</references>`,
     context,
   });
-  console.log(response.response);
 
+  // This allows the model to recal previous requests from the user
   context = response.context;
+
   return response.response;
 }
 
