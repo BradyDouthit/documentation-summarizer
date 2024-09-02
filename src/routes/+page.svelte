@@ -11,6 +11,9 @@
   </div>
   <Answer bind:answer />
 </main>
+<svelte:head>
+  <title>SyntaxClarity</title>
+</svelte:head>
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Fira+Code:wght@400&display=swap");
