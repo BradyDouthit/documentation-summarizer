@@ -4,20 +4,31 @@
   export const URL_FORM = "url-form";
   export let answer;
 
-  let url = "";
   let question = "";
+  const URL_REGEX =
+    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
   async function handleSubmit() {
+    let urls = [];
+
+    try {
+      urls = Array.from(question.matchAll(URL_REGEX)).map((match) => match[0]);
+    } catch (error) {
+      answer = { warning: "Please provide a valid URL" };
+      return;
+    }
+
     try {
       const resp = await fetch(`/api/scrape`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, question }),
+        body: JSON.stringify({ urls, question }),
       });
       const body = await resp.json();
       answer = body;
     } catch (error) {
-      console.log("could not get url");
+      console.log("could not get url", error);
+      answer = { error: "Something went wrong. Please try again." };
     }
   }
 </script>
@@ -30,22 +41,14 @@
       placeholder="Help me make a web server in Go"
       bind:value={question}
     />
-    <input
-      id="url"
-      type="text"
-      placeholder="(optional) https://pkg.go.dev/std"
-      autocomplete="off"
-      class="fw"
-      bind:value={url}
-    />
     <button id="summarize" type="submit">Search</button>
     <InfoBanner />
   </form>
 </footer>
 
 <style>
-  input,
   textarea {
+    resize: none;
     padding: 0px;
     padding-block: 0px;
     padding-inline: 0px;
@@ -68,7 +71,7 @@
 
   button {
     padding: 10px 20px;
-    background-color: var(--primary-color);
+    background-color: var(--primary-color-dark);
     color: var(--text-color-dark);
     border: none;
     border-radius: var(--border-radius);
@@ -109,7 +112,7 @@
     width: 80%;
   }
 
-  #url-form input:focus {
+  #url-form textarea:focus {
     border-color: var(--primary-color);
     outline: none;
   }
@@ -119,7 +122,7 @@
   }
 
   #url-form button:hover {
-    background-color: var(--primary-color-dark);
+    background-color: var(--primary-color);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
 </style>

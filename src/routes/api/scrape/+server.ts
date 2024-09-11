@@ -23,8 +23,7 @@ function getInnerText(xmlString: string, tagName: string) {
   return xmlString.substring(startIndex, endIndex);
 }
 
-// retries the request a single time. Reddit for some reason blocks the first time but not the second.
-async function getPageContents(url: string) {
+async function fetchWithRetry(url: string) {
   try {
     const resp = await fetch(url);
 
@@ -38,6 +37,21 @@ async function getPageContents(url: string) {
   } catch (err) {
     const resp = await fetch(url);
     return resp;
+  }
+}
+
+// retries the request a single time. Reddit for some reason blocks the first time but not the second.
+async function getPageContents(urls: string[]) {
+  try {
+    const promises = urls.map(async (url) => {
+      const resp = await fetchWithRetry(url);
+      const html = await resp.text();
+      return html;
+    });
+    const pages = await Promise.all(promises);
+    return pages.map((page) => `<reference>${purifyHTML(page)}</reference>`);
+  } catch (err) {
+    return [];
   }
 }
 
@@ -69,7 +83,7 @@ async function generateAnswer(question: string, references: string) {
   const response = await ollama.generate({
     model: MODEL_ID,
     prompt: question,
-    system: `${systemPrompt}<references>${references}</references>`,
+    system: `<references>${references}</references>${systemPrompt}`,
     context,
   });
 
@@ -93,19 +107,13 @@ function convertAnswerToJSON(answer: string) {
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
-    const { url, question } = await request.json();
+    const { urls, question } = await request.json();
 
-    if (url) {
-      const resp = await getPageContents(url);
-
-      if (resp.status === 200) {
-        const rawHTML = await resp.text();
-        const purified = purifyHTML(rawHTML);
-        const answer = await generateAnswer(question, purified);
-
-        const parsed = convertAnswerToJSON(answer);
-        return json(parsed);
-      }
+    if (urls.length > 0) {
+      const texts = await getPageContents(urls);
+      const answer = await generateAnswer(question, texts.join(""));
+      const parsed = convertAnswerToJSON(answer);
+      return json(parsed);
     }
 
     // No references provided
