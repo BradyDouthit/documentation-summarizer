@@ -8,6 +8,7 @@
     info = answer.info;
     warning = answer.warning;
     error = answer.error;
+    console.log({ info, warning, error });
   }
 </script>
 
@@ -24,7 +25,7 @@
     <pre class="info summary">{info}</pre>
   {/if}
 
-  {#if !error && warning && info}
+  {#if !error && !warning && !info}
     <h3 id="get-started">
       Enter a URL to get a quick summary of developer documentation, including
       languages, keywords, and key insights. Your session context is saved as

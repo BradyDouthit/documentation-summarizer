@@ -106,7 +106,7 @@ function convertAnswerToJSON(answer: string) {
     return { info, warning, error: answer };
   }
 
-  return { info, warning, error };
+  return { info, warning, error, raw: answer };
 }
 
 export const POST: RequestHandler = async ({ request }) => {
