@@ -28,7 +28,7 @@
     <h3 id="get-started">
       Enter a URL to get a quick summary of developer documentation, including
       languages, keywords, and key insights. Your session context is saved as
-      you explore multiple docs and ask questions.
+      you explore multiple docs and ask follow up questions.
     </h3>
   {/if}
 </section>
