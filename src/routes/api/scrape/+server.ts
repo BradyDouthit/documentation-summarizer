@@ -9,14 +9,18 @@ const MODEL_ID = "llama3.1";
 
 let context: number[] = [];
 
-function getInnerText(xmlString: string, tagName: string) {
+function getInnerText(xmlString: string, tagName: string, partial = true) {
   const tagStart = `<${tagName}>`;
   const tagEnd = `</${tagName}>`;
 
   const startIndex = xmlString.indexOf(tagStart) + tagStart.length;
   const endIndex = xmlString.indexOf(tagEnd);
 
-  if (startIndex === -1 || endIndex === -1 || endIndex < startIndex) {
+  if (
+    (!partial && startIndex === -1) ||
+    endIndex === -1 ||
+    endIndex < startIndex
+  ) {
     return "";
   }
 
