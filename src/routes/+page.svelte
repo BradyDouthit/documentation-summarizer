@@ -12,7 +12,7 @@
   <Answer bind:answer />
 </main>
 <svelte:head>
-  <title>SyntaxClarity</title>
+  <title>Document Summarizer</title>
 </svelte:head>
 
 <style>
@@ -30,6 +30,7 @@
     --shadow-color: rgba(0, 0, 0, 0.6); /* A darker shadow for more depth */
     --border-radius: 2px;
     --error-color: #e57373;
+    --warning-color: #e0ad36;
   }
 
   :global(html) {

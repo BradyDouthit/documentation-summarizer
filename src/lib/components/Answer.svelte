@@ -1,8 +1,12 @@
 <script>
   export let answer;
+  let info = "";
+  let warning = "";
   let error = "";
 
   $: {
+    info = answer.info;
+    warning = answer.warning;
     error = answer.error;
   }
 </script>
@@ -12,22 +16,12 @@
     <pre class="error summary">{error}</pre>
   {/if}
 
-  {#if Object.entries(answer).length > 0 && Array.isArray(answer.languages) && Array.isArray(answer.keywords) && !Boolean(error)}
-    <h2 class="topic">{answer.topic}</h2>
+  {#if warning}
+    <pre class="warning summary">{warning}</pre>
+  {/if}
 
-    <div class="languages-wrapper">
-      {#each answer.languages as language}
-        <span class="language">{language}</span>
-      {/each}
-    </div>
-
-    <div class="keywords-wrapper">
-      {#each answer.keywords as keyword}
-        <span class="keyword">{keyword}</span>
-      {/each}
-    </div>
-
-    <p class="summary">{answer.summary}</p>
+  {#if info}
+    <pre class="info summary">{info}</pre>
   {/if}
 </section>
 
@@ -45,46 +39,6 @@
     gap: 8px;
   }
 
-  .languages-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .language {
-    padding: 5px 10px;
-    border-radius: var(--border-radius);
-    height: fit-content;
-
-    background-color: var(--primary-color);
-    color: var(--text-color-dark);
-  }
-
-  .topic {
-    margin-top: 20px;
-
-    font-size: 1.5em;
-    font-weight: bold;
-    color: var(--text-color);
-  }
-
-  .keywords-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 8px;
-  }
-
-  .keyword {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: var(--border-radius);
-    text-wrap: nowrap;
-
-    height: fit-content;
-    background-color: var(--accent-color);
-    color: var(--text-color-dark);
-  }
-
   .summary {
     margin-top: 20px;
     line-height: 1.6;
@@ -93,6 +47,10 @@
 
     background-color: #1a1a1a;
     border-left: 5px solid var(--primary-color);
+  }
+
+  .summary.warning {
+    border-color: var(--warning-color);
   }
 
   .summary.error {

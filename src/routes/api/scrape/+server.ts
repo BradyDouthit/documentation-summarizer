@@ -1,5 +1,4 @@
 import fs from "fs/promises";
-import path from "path";
 import type { RequestHandler } from "@sveltejs/kit";
 import { error, json } from "@sveltejs/kit";
 import ollama from "ollama";
@@ -80,6 +79,18 @@ async function generateAnswer(question: string, references: string) {
   return response.response;
 }
 
+function convertAnswerToJSON(answer: string) {
+  const info = getInnerText(answer, "info");
+  const warning = getInnerText(answer, "warning");
+  const error = getInnerText(answer, "error");
+
+  if (!info && !warning && !error) {
+    return { info, warning, error: answer };
+  }
+
+  return { info, warning, error };
+}
+
 export const POST: RequestHandler = async ({ request }) => {
   try {
     const { url, question } = await request.json();
@@ -92,14 +103,16 @@ export const POST: RequestHandler = async ({ request }) => {
         const purified = purifyHTML(rawHTML);
         const answer = await generateAnswer(question, purified);
 
-        return json({ answer, error: answer });
+        const parsed = convertAnswerToJSON(answer);
+        return json(parsed);
       }
     }
 
     // No references provided
     const answer = await generateAnswer(question, "");
 
-    return json({ answer, error: answer });
+    const parsed = convertAnswerToJSON(answer);
+    return json(parsed);
   } catch (err) {
     return error(500, "Something unexpected happened");
   }
