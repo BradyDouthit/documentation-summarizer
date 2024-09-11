@@ -27,7 +27,6 @@
       const body = await resp.json();
       answer = body;
     } catch (error) {
-      console.log("could not get url", error);
       answer = { error: "Something went wrong. Please try again." };
     }
   }

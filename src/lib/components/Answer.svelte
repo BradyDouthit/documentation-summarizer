@@ -8,7 +8,6 @@
     info = answer.info;
     warning = answer.warning;
     error = answer.error;
-    console.log({ info, warning, error });
   }
 </script>
 
