@@ -23,6 +23,14 @@
   {#if info}
     <pre class="info summary">{info}</pre>
   {/if}
+
+  {#if !error || warning || info}
+    <h3 id="get-started">
+      Enter a URL to get a quick summary of developer documentation, including
+      languages, keywords, and key insights. Your session context is saved as
+      you explore multiple docs and ask questions.
+    </h3>
+  {/if}
 </section>
 
 <style>
@@ -55,5 +63,15 @@
 
   .summary.error {
     border-color: var(--error-color);
+  }
+
+  #get-started {
+    text-align: center;
+    color: #b0b0b0;
+    text-align: center;
+    max-width: 800px;
+    line-height: 1.5;
+    align-self: center;
+    margin: auto auto;
   }
 </style>

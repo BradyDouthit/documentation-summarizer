@@ -38,7 +38,7 @@
     <textarea
       class="fw"
       id="question"
-      placeholder="Help me make a web server in Go"
+      placeholder="Help me make a web server in Go. Here are some relevant docs: https://pkg.go.dev/net/http"
       bind:value={question}
     />
     <button id="summarize" type="submit">Search</button>
