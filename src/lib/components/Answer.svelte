@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
   import SvelteMarkdown from "svelte-markdown";
   import "highlight.js/styles/tokyo-night-dark.min.css";
   import CodeRenderer from "./CodeRenderer.svelte";
 
   export let answer;
-  let source = "";
+  export let source = "";
 
   $: {
     source = answer.answer;
@@ -14,7 +14,10 @@
 <section id="full-answer-wrapper">
   {#if source}
     <div id="summary">
-      <SvelteMarkdown renderers={{ code: CodeRenderer }} {source} />
+      <SvelteMarkdown
+        renderers={{ code: CodeRenderer }}
+        source={answer.answer}
+      />
     </div>
   {/if}
 

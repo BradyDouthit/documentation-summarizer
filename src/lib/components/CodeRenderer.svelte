@@ -4,9 +4,14 @@
   export let text = "";
   export let lang = "";
 
-  let highlightedText = hljs.highlight(text, {
-    language: lang || "plaintext",
-  }).value;
+  let highlightedText: string;
+
+  $: {
+    console.log(text);
+    highlightedText = hljs.highlight(text, {
+      language: lang || "plaintext",
+    }).value;
+  }
 </script>
 
 <pre class={`language-` + lang}>
