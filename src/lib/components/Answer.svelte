@@ -1,30 +1,24 @@
 <script>
+  import SvelteMarkdown from "svelte-markdown";
+  import "highlight.js/styles/tokyo-night-dark.min.css";
+  import CodeRenderer from "./CodeRenderer.svelte";
+
   export let answer;
-  let info = "";
-  let warning = "";
-  let error = "";
+  let source = "";
 
   $: {
-    info = answer.info;
-    warning = answer.warning;
-    error = answer.error;
+    source = answer.answer;
   }
 </script>
 
 <section id="full-answer-wrapper">
-  {#if error}
-    <pre class="error summary">{error}</pre>
+  {#if source}
+    <div id="summary">
+      <SvelteMarkdown renderers={{ code: CodeRenderer }} {source} />
+    </div>
   {/if}
 
-  {#if warning}
-    <pre class="warning summary">{warning}</pre>
-  {/if}
-
-  {#if info}
-    <pre class="info summary">{info}</pre>
-  {/if}
-
-  {#if !error && !warning && !info}
+  {#if !source}
     <h3 id="get-started">
       Enter a URL to get a quick summary of developer documentation, including
       languages, keywords, and key insights. Your session context is saved as
@@ -34,10 +28,6 @@
 </section>
 
 <style>
-  pre {
-    text-wrap: pretty;
-  }
-
   #full-answer-wrapper {
     width: 80%;
     padding: 12px;
@@ -47,22 +37,15 @@
     gap: 8px;
   }
 
-  .summary {
+  #summary {
     margin-top: 20px;
     line-height: 1.6;
     padding: 15px;
     border-radius: var(--border-radius);
+    text-wrap: pretty;
 
     background-color: #1a1a1a;
     border-left: 5px solid var(--primary-color);
-  }
-
-  .summary.warning {
-    border-color: var(--warning-color);
-  }
-
-  .summary.error {
-    border-color: var(--error-color);
   }
 
   #get-started {

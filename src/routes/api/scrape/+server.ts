@@ -116,15 +116,15 @@ export const POST: RequestHandler = async ({ request }) => {
     if (urls.length > 0) {
       const texts = await getPageContents(urls);
       const answer = await generateAnswer(question, texts.join(""));
-      const parsed = convertAnswerToJSON(answer);
-      return json(parsed);
+      // const parsed = convertAnswerToJSON(answer);
+      return json({ answer });
     }
 
     // No references provided
     const answer = await generateAnswer(question, "");
 
-    const parsed = convertAnswerToJSON(answer);
-    return json(parsed);
+    // const parsed = convertAnswerToJSON(answer);
+    return json({ answer });
   } catch (err) {
     return error(500, "Something unexpected happened");
   }
