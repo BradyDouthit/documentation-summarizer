@@ -1,33 +1,32 @@
-<script>
+<script lang="ts">
+  import SvelteMarkdown from "svelte-markdown";
+  import "highlight.js/styles/tokyo-night-dark.min.css";
+  import CodeRenderer from "./CodeRenderer.svelte";
+
   export let answer;
-  let error = "";
+  export let source = "";
 
   $: {
-    error = answer.error;
+    source = answer.answer;
   }
 </script>
 
 <section id="full-answer-wrapper">
-  {#if error}
-    <p class="error summary">{error}</p>
+  {#if source}
+    <div id="summary">
+      <SvelteMarkdown
+        renderers={{ code: CodeRenderer }}
+        source={answer.answer}
+      />
+    </div>
   {/if}
 
-  {#if Object.entries(answer).length > 0 && Array.isArray(answer.languages) && Array.isArray(answer.keywords) && !Boolean(error)}
-    <h2 class="topic">{answer.topic}</h2>
-
-    <div class="languages-wrapper">
-      {#each answer.languages as language}
-        <span class="language">{language}</span>
-      {/each}
-    </div>
-
-    <div class="keywords-wrapper">
-      {#each answer.keywords as keyword}
-        <span class="keyword">{keyword}</span>
-      {/each}
-    </div>
-
-    <p class="summary">{answer.summary}</p>
+  {#if !source}
+    <h3 id="get-started">
+      Enter a URL to get a quick summary of developer documentation, including
+      languages, keywords, and key insights. Your session context is saved as
+      you explore multiple docs and ask follow up questions.
+    </h3>
   {/if}
 </section>
 
@@ -41,57 +40,24 @@
     gap: 8px;
   }
 
-  .languages-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .language {
-    padding: 5px 10px;
-    border-radius: var(--border-radius);
-    height: fit-content;
-
-    background-color: var(--primary-color);
-    color: var(--text-color-dark);
-  }
-
-  .topic {
-    margin-top: 20px;
-
-    font-size: 1.5em;
-    font-weight: bold;
-    color: var(--text-color);
-  }
-
-  .keywords-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 8px;
-  }
-
-  .keyword {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: var(--border-radius);
-    text-wrap: nowrap;
-
-    height: fit-content;
-    background-color: var(--accent-color);
-    color: var(--text-color-dark);
-  }
-
-  .summary {
+  #summary {
     margin-top: 20px;
     line-height: 1.6;
     padding: 15px;
     border-radius: var(--border-radius);
+    text-wrap: pretty;
 
     background-color: #1a1a1a;
     border-left: 5px solid var(--primary-color);
   }
 
-  .summary.error {
-    border-color: var(--error-color);
+  #get-started {
+    text-align: center;
+    color: #b0b0b0;
+    text-align: center;
+    max-width: 800px;
+    line-height: 1.5;
+    align-self: center;
+    margin: auto auto;
   }
 </style>

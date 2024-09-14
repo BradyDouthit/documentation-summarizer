@@ -16,8 +16,7 @@
 
 {#if !wasPreviouslyMuted}
   <div id="banner">
-    To get started, enter a URL and let DevQuick do the heavy lifting by
-    providing summaries, key languages, and topics at a glance.
+    To get started, enter a URL to the documentation you want clarity on.
     <button on:click={onClick}>X</button>
   </div>
 {/if}

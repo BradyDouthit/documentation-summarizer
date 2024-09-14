@@ -11,6 +11,9 @@
   </div>
   <Answer bind:answer />
 </main>
+<svelte:head>
+  <title>Document Summarizer</title>
+</svelte:head>
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Fira+Code:wght@400&display=swap");
@@ -27,6 +30,7 @@
     --shadow-color: rgba(0, 0, 0, 0.6); /* A darker shadow for more depth */
     --border-radius: 2px;
     --error-color: #e57373;
+    --warning-color: #e0ad36;
   }
 
   :global(html) {
