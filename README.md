@@ -13,7 +13,7 @@ To run Documentation Summarizer, you’ll need the following:
 Clone the repository and install the necessary dependencies:
 
 ``` bash
-git clone https://github.com/yourusername/documentation-summarizer.git
+git clone https://github.com/BradyDouthit/documentation-summarizer.git
 cd documentation-summarizer
 npm install
 ```
