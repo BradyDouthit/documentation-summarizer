@@ -39,9 +39,9 @@ Documentation Summarizer is designed to provide quick, relevant summaries of dev
    b. Without a URL: If no URL is provided, the model will do its best to answer the question based on its knowledge. However, it will suggest that you provide a URL to improve the accuracy of future responses.  
    c. Handling Irrelevant Content: If the fetched content from the URL is not relevant to technical documentation, the model will inform you and prompt you to ask something more technical or provide a more suitable reference.
 
-The app implements **Retrieval Augmented Generation (RAG)** to ensure that the summaries and information it provides are grounded in the actual document fetched from the URL. Instead of relying solely on pre-trained knowledge, the model is fed with real data, which allows it to give more accurate, context-specific responses.
+The app implements Retrieval Augmented Generation (RAG) to ensure that the summaries and information it provides are grounded in the actual document fetched from the URL. Instead of relying solely on pre-trained knowledge, the model is fed with data based on what the user deems relevant for the question, which allows it to give more accurate, context-specific responses.
 
-**Note:** The purpose of this project isn’t to create the best or most beautiful UI out there. While it’s functional, it could definitely use some polish from a design perspective. The focus has primarily been on making the backend work well and improving the experience of fetching and summarizing technical content. It also is a project I only work on a little in between work, life, and other passion projects.
+**Note:** The purpose of this project isn’t to create the best or most beautiful UI out there. While it’s (mostly) functional, it could definitely use some polish from a design perspective. The focus has primarily been on making the backend work well and improving the experience of fetching and summarizing technical content. It also is a project I only work on a little in between work, life, and other passion projects.
 
 
 ## System Prompting
